@@ -17,6 +17,9 @@ with 0 facing up.
 
 ## Organization
 
-- `vision/`: Pi code for marker detection, LCD display, and communication with the Arduino
-- `control/`: Arduino position controller plus Simulink/MATLAB models and step response scripts
+- `vision/`: Pi code for marker detection, LCD display, and communication with the Arduino (see [`vision/README.md`](vision/README.md))
+- `control/`: Arduino position controller, I2C test tools, and Simulink/MATLAB models and step response scripts (see [`control/README.md`](control/README.md))
 - `resources/`: assignment handout and reference material
+
+The Pi talks to the Arduino over I2C (Arduino at address `0x08`). The message
+format is in [`control/README.md`](control/README.md#i2c-protocol).

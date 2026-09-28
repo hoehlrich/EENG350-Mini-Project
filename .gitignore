@@ -1,0 +1,8 @@
+# Simulink build artifacts
+slprj/
+*.slxc
+*.autosave
+*.asv
+
+# Python
+__pycache__/
