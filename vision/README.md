@@ -19,9 +19,10 @@ Send goals over I2C to the Arduino at address `0x08` on bus 1:
 ```python
 from smbus2 import SMBus
 bus = SMBus(1)
-bus.write_i2c_block_data(0x08, 0, [left, right])       # each goal 0 or 1
-left, right, flags = bus.read_i2c_block_data(0x08, 0, 3)  # optional check
+bus.write_i2c_block_data(0x08, 0, [left, right])   # each goal 0 or 1
 ```
+
+The Arduino doesn't reply.
 
 The full protocol is in [`control/README.md`](../control/README.md#i2c-protocol).
 `control/tests/i2c_send_goals.py` sends goals without the vision code.

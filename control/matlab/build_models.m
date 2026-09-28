@@ -8,8 +8,10 @@
 %
 %   position_control.slx  PI position loop around the proportional
 %                         velocity loop (mini project handout section 6).
-%                         Compared with position_control.ino STEP_TEST
-%                         data in run_position.m.
+%                         The desired position comes from the workspace, so
+%                         it can follow the quadrant goal sequence. Compared
+%                         with position_control.ino STEP_TEST data in
+%                         run_position.m.
 %
 % Block parameters are variable names (K, sigma, Kp_pos, ...) that come
 % from motor_params.m, so changing a gain never needs a rebuild.
@@ -50,12 +52,15 @@ m = 'position_control';
 if bdIsLoaded(m), close_system(m, 0); end
 if isfile(fullfile(here, [m '.slx'])), delete(fullfile(here, [m '.slx'])); end
 new_system(m);
-set_param(m, 'StopTime', '5', 'MaxStep', '1e-3');   % fine steps for smooth plots
+set_param(m, 'StopTime', 'Stop_Time', 'MaxStep', '1e-3');   % fine steps for smooth plots
 
-% Desired position: goal 0 -> goal 1 (pi rad) at Step_Time
-add_block('simulink/Sources/Step', [m '/Desired Position'], ...
-    'Time', 'Step_Time', 'Before', '0', 'After', 'Step_Position', ...
-    'Position', [30 100 60 130]);
+% Desired position: [time, rad] rows in DesiredPositionIn, each value held
+% until the next row. motor_params.m and run_position.m build it from the
+% goal sequence (see goal_signal.m).
+add_block('simulink/Sources/From Workspace', [m '/Desired Position'], ...
+    'VariableName', 'DesiredPositionIn', 'Interpolate', 'off', ...
+    'OutputAfterFinalValue', 'Holding final value', ...
+    'Position', [20 100 70 130]);
 add_block('simulink/Math Operations/Sum', [m '/Position Error'], ...
     'Inputs', '|+-', 'IconShape', 'round', 'Position', [110 105 130 125]);
 

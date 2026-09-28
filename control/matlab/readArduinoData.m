@@ -12,11 +12,12 @@ function data = readArduinoData(outFile, nColumns, port, baud)
 %
 %   Open loop step (step_response.ino):
 %       readArduinoData("openloop_data.mat", 5)
-%   Closed loop position step (position_control.ino with STEP_TEST):
-%       readArduinoData("position_data.mat", 5)
+%   Closed loop quadrant table test (position_control.ino with STEP_TEST):
+%       readArduinoData("position_data.mat", 7)
 %
 %   Both sketches print time, then voltage and velocity/position for the
-%   left wheel, then the same for the right wheel.
+%   left wheel, then the same for the right wheel. position_control.ino
+%   also prints the left and right goals.
 %
 %   Before running: upload the sketch, close the Arduino IDE serial monitor
 %   (only one program can hold the port), and set the wheels to 0, because

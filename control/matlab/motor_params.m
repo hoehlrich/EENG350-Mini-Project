@@ -20,21 +20,35 @@ K     = K1;
 sigma = sigma1;
 
 %% Controller (same names as position_control.ino)
-Kp_vel    = 3.0;   % velocity loop gain (V per rad/s), from assignment 2
-Kp_pos    = 10.0;   % position proportional gain ((rad/s) per rad), tuned in run_position.m
-Ki_pos    = 10.0;   % position integral gain ((rad/s) per rad*s), tuned in run_position.m
+Kp_vel    = 3.2;   % velocity loop gain (V per rad/s), from the working assignment 2 code
+Kp_pos    = 5.0;   % position proportional gain ((rad/s) per rad)
+Ki_pos    = 2.0;   % position integral gain ((rad/s) per rad*s)
 MAX_SPEED = 6.0;   % limit on the desired speed from the position loop (rad/s)
 
-Battery_Voltage = 7.8;   % V, limits the motor voltage
+Battery_Voltage = 7.0;   % V, limits the motor voltage
 Ts = 0.01;               % Arduino loop time (s)
 
 %% Experiment settings
 % Open loop: voltage step from 0 to Step_Voltage at t = 1 s (step_response.ino)
 Step_Voltage = 3.0;      % V
-% Closed loop: position goal step from 0 to Step_Position at t = 1 s
-% (position_control.ino with STEP_TEST defined, goal 1 = pi rad)
-Step_Position = pi;      % rad
-Step_Time = 1.0;         % s
+Step_Time = 1.0;         % s, time of the voltage step and the first goal change
+
+% Closed loop: position_control.ino with STEP_TEST runs the quadrant table,
+% one goal pair after another. Keep in sync with SUITE_GOALS, STEP_TIME and
+% STAGE_TIME in the sketch.
+Suite_Goals = [0 0       % NE (start)       [left right]
+               0 1       % NW: right 0 -> 1
+               1 1       % SW: left  0 -> 1
+               1 0       % SE: right 1 -> 0
+               0 0];     % NE: left  1 -> 0
+Stage_Time = 3.0;        % s at each goal pair after the first
+Stop_Time = Step_Time + (size(Suite_Goals, 1) - 1) * Stage_Time;   % s, RUN_TIME in the sketch
+Step_Position = pi;      % rad, goal 1
+
+% Desired position for position_control.slx ([time, rad] rows). The
+% default is the left wheel's part of the suite; run_position.m sets it for
+% each wheel.
+DesiredPositionIn = goal_signal(Suite_Goals(:, 1), Step_Time, Stage_Time);
 
 % Voltage disturbance added at the motor input, to show integral action.
 % Zero for the normal step response; run_position.m sets it for its
