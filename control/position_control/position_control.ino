@@ -42,7 +42,7 @@
 #include <Wire.h>
 
 // Uncomment to run the quadrant table as a step test instead of listening to the Pi
-#define STEP_TEST
+// #define STEP_TEST
 
 // ------------------------------ settings ------------------------------------
 const float Kp_vel = 3.2;
